@@ -16,6 +16,9 @@ services:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
     ports:
       - "5002:5002"
+    command: >
+        bash -c "bin/logstash-plugin install logstash-filter-multiline &&
+                bin/logstash -f /usr/share/logstash/pipeline/logstash.conf"
     networks:
       - elk-network
     depends_on:
@@ -36,8 +39,8 @@ services:
     image: docker.elastic.co/beats/filebeat:7.6.2
     volumes:
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
-      - /home/hasnas/log/:/usr/share/temp-log/
-    ports: 
+      - /opt/bd/log/8083/:/usr/share/temp-log/
+    ports:
         - "5000:5000"
     command: filebeat -e -strict.perms=false
     networks:
